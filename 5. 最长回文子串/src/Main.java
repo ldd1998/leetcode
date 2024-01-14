@@ -1,62 +1,44 @@
-import java.util.TreeMap;
-
 /**
  * @author ldd
  */
 public class Main {
     public static void main(String[] args) {
-        String s = "atttta";
+//        String s = "atttta";
+        String s = "cbbd";
         String s1 = Solution.longestPalindrome(s);
         System.out.println(s1);
     }
 
     static class Solution {
         public static String longestPalindrome(String s) {
-            if (s.length() == 0) {
+            if(s == null || s.length() == 0){
                 return "";
             }
-            int mid = 0;
-            TreeMap<Integer, String> map = new TreeMap<>();
-            while (mid < s.length()) {
-                int left = mid;
-                int right = mid;
-                while ((left >= 0 && right < s.length()) && s.charAt(left) == s.charAt(right)) {
-                    // 是回文数
-                    map.put(right + 1 - left, s.substring(left, right + 1));
-                    left--;
-                    right++;
+            String palindromeStr = "";
+            for (int i = 0; i < s.length(); i++) {
+                String palindromeStr1 = ifPalindrome(s, String.valueOf(s.charAt(i)),i,i);
+                String palindromeStr2 = "";
+                if(i < s.length() - 1 && s.charAt(i) == s.charAt(i + 1)){
+                     palindromeStr2 = ifPalindrome(s, s.charAt(i) + String.valueOf(s.charAt(i + 1)),i,i + 1);
                 }
-                left = mid - 1;
-                right = mid;
-                while ((left >= 0 && right < s.length()) && s.charAt(mid) == s.charAt(left)) {
-                    // 是回文数
-                    map.put(right + 1 - left, s.substring(left, right + 1));
-                    left--;
-                    right++;
-                    if ((left >= 0 && right < s.length()) && s.charAt(left) == s.charAt(right)) {
-                        // 还是回文数
-                        map.put(right + 1 - left, s.substring(left, right + 1));
-                        right++;
-                        left--;
-                    }
-                }
-                left = mid;
-                right = mid + 1;
-                while ((left >= 0 && right < s.length()) && s.charAt(mid) == s.charAt(right)) {
-                    // 是回文数
-                    map.put(right + 1 - left, s.substring(left, right + 1));
-                    right++;
-                    left--;
-                    if ((left >= 0 && right < s.length()) && s.charAt(left) == s.charAt(right)) {
-                        // 还是回文数
-                        map.put(right + 1 - left, s.substring(left, right + 1));
-                        right++;
-                        left--;
-                    }
-                }
-                mid++;
+                String palindromeStr3 = palindromeStr1.length() > palindromeStr2.length() ? palindromeStr1 : palindromeStr2;
+                palindromeStr = palindromeStr.length()>palindromeStr3.length()?palindromeStr:palindromeStr3;
             }
-            return map.get(map.lastKey());
+            return palindromeStr;
+        }
+
+        static String ifPalindrome(String s,String palindromeStr, int left,int right) {
+            while (left >= 1 && right < s.length() - 1) {
+                left = left - 1;
+                right = right + 1;
+                if (s.charAt(left) == s.charAt(right)) {
+                    palindromeStr = palindromeStr + s.charAt(right);
+                    palindromeStr = s.charAt(left) + palindromeStr;
+                } else {
+                    return palindromeStr;
+                }
+            }
+            return palindromeStr;
         }
     }
 }
